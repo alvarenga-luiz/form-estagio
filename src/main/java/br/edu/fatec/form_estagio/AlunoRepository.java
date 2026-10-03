@@ -21,7 +21,5 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	
 	boolean existsByImdbId (String imdbId);
 	
-	@Query("UPDATE Aluno f SET f.desabilitado = :desabilitado WHERE f.id = :id")
-	@Modifying
-	public void atualizaStatus(Long id, boolean desabilitado);
+	
 }
