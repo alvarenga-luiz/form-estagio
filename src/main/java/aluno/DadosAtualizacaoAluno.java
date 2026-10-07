@@ -1,4 +1,4 @@
-package br.edu.fatec.form_estagio;
+package aluno;
 
 import jakarta.validation.constraints.NotNull;
 
