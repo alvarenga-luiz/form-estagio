@@ -54,6 +54,21 @@
 				</div>
 			</div>
 
+			<!-- E-mail e contato: UMA vez, DENTRO do form -->
+			<div class="row g-3 mb-3">
+				<div class="col-md-8">
+					<label for="email" class="form-label">E-mail</label>
+					<input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{email}"></div>
+				</div>
+				<div class="col-md-4">
+					<label for="contato" class="form-label">Contato</label>
+					<input type="text" class="form-control" id="contato" th:field="*{contato}"
+						placeholder="(11) 91234-5678" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{contato}"></div>
+				</div>
+			</div>
+
 			<div class="row g-3 mb-3">
 				<div class="col-md-4">
 					<label for="cep" class="form-label">CEP</label>

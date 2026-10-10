@@ -4,7 +4,7 @@
 <body>
 	<header th:replace="~{fragmentos/header :: header(activePage='aluno')}"></header>
 
-	<div class="container-fluid" style="max-width: 1000px; margin: 0 auto;">
+	<div class="container-fluid" style="max-width: 1200px; margin: 0 auto;">
 		<h2 class="text-center mt-3">Alunos</h2>
 
 		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
@@ -16,6 +16,7 @@
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 
+		<!-- Busca -->
 		<div class="my-3">
 			<form th:action="@{/aluno}">
 				<div class="row g-2">
@@ -32,12 +33,15 @@
 			</form>
 		</div>
 
-		<div th:if="${lista.size() > 0}">
-			<table class="table table-hover table-responsive-xl">
+		<!-- Tabela -->
+		<div th:if="${lista.size() > 0}" class="table-responsive">
+			<table class="table table-hover">
 				<thead class="table-light">
 					<tr>
 						<th scope="col">RA</th>
 						<th scope="col">Nome</th>
+						<th scope="col">E-mail</th>
+						<th scope="col">Contato</th>
 						<th scope="col">CEP</th>
 						<th scope="col">Nascimento</th>
 						<th scope="col">Ingresso</th>
@@ -49,6 +53,8 @@
 					<tr th:each="a : ${lista}">
 						<td>[[${a.ra()}]]</td>
 						<td>[[${a.nome()}]]</td>
+						<td>[[${a.email()}]]</td>
+						<td>[[${a.contato()}]]</td>
 						<td>[[${a.cep()}]]</td>
 						<td th:text="${#temporals.format(a.dataNascimento(), 'dd/MM/yyyy')}"></td>
 						<td th:text="${#temporals.format(a.dataIngresso(), 'dd/MM/yyyy')}"></td>

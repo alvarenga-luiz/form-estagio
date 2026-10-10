@@ -2,7 +2,6 @@ package app.aluno;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 
 import app.curso.*;
 import jakarta.persistence.Entity;
@@ -41,7 +40,6 @@ public class Aluno implements Serializable {
 	private String cep;
 	private String contato;
 	
-	private List<Aluno> alunos;
 		
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "curso_id", nullable = false)
