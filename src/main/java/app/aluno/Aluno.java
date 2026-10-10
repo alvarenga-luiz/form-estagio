@@ -3,6 +3,7 @@ package app.aluno;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import app.escola.*;
 import app.curso.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,6 +45,10 @@ public class Aluno implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "curso_id", nullable = false)
 	private Curso curso;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "escola_id", nullable = false)
+	private Escola escola;
 }
 
 
