@@ -64,22 +64,22 @@ public class Contrato {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public void atualizarInformacoes(DadosAtualizacaoContrato dados) {
-        if (dados.status() != null) {
-            this.status = dados.status();
-        }
-        if (dados.supervisor() != null) {
-            this.status = dados.status();
-        }
-        if (dados.cargoSupervisor() != null) {
-            this.cargoSupervisor = dados.cargoSupervisor();
-        }
-        if (dados.descFuncao() != null) {
-            this.descFuncao = dados.descFuncao();
-        }
-        if (dados.cargaHoraria() != null) {
-            this.cargaHoraria = dados.cargaHoraria();
-        }
-    }
+//    public void atualizarInformacoes(DadosAtualizacaoContrato dados) {
+//        if (dados.status() != null) {
+//            this.status = dados.status();
+//        }
+//        if (dados.supervisor() != null) {
+//            this.supervisor = dados.supervisor();
+//        }
+//        if (dados.cargoSupervisor() != null) {
+//            this.cargoSupervisor = dados.cargoSupervisor();
+//        }
+//        if (dados.descFuncao() != null) {
+//            this.descFuncao = dados.descFuncao();
+//        }
+//        if (dados.cargaHoraria() != null) {
+//            this.cargaHoraria = dados.cargaHoraria();
+//        }
+//    }
 
 }
