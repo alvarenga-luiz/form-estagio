@@ -1,10 +1,10 @@
-package aluno;
+package app.aluno;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import curso.Curso;
 
+import app.curso.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

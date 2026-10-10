@@ -1,8 +1,6 @@
-package aluno;
+package app.aluno;
 
 import java.util.List;
-import curso.Curso;
-import curso.CursoService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import app.curso.Curso;
+import app.curso.CursoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,36 +26,47 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Alunos", description = "Gerenciamento de alunos")
 @RequiredArgsConstructor
 public class AlunoController {
-	
+
 	private final AlunoService alunoService;
 	private final CursoService cursoService; 
-	
+
 	@GetMapping
-	@Operation(summary = "Carrega a tela de aluno (com busca opcional)")
-	public String carregaPagina(@RequestParam(required = false) String termo, Model model) {
-		List<DadosListagemAluno> lista = alunoService.listar(termo);
-		boolean buscando = termo != null && !termo.isBlank();
-		
+	@Operation(summary = "Carrega página de listagem")
+	public String carregaPaginaListagem(@RequestParam(required = false) String keyword, Model model) {
+		model.addAttribute("lista", alunoService.listar(keyword));
+		model.addAttribute("keyword", keyword);
+		return "aluno/listagem";
+	}
+
+	@GetMapping("/formulario")
+	@Operation(summary = "Novo aluno / buscar aluno")
+	public String novoAluno(@RequestParam(required = false) String termo, Model model) {
 		Aluno aluno = alunoVazio();
-		if (buscando && lista.size() == 1) {
-			aluno = alunoService.buscarPorId(lista.get(0).id()); 
-		} else if (buscando && lista.isEmpty()) {
-			model.addAttribute("error", "Nenhum aluno encontrado para '" + termo + "'.");
+
+		if (termo != null && !termo.isBlank()) {
+			List<DadosListagemAluno> resultados = alunoService.listar(termo);
+			if (resultados.size() == 1) {
+				aluno = alunoService.buscarPorId(resultados.get(0).id()); 
+			} else if (resultados.isEmpty()) {
+				model.addAttribute("error", "Nenhum aluno encontrado para '" + termo + "'.");
+			} else {
+				model.addAttribute("resultados", resultados); 
+			}
 		}
 
 		model.addAttribute("aluno", aluno);
-		model.addAttribute("lista", lista);
-		model.addAttribute("cursos", cursoService.listar(null));
 		model.addAttribute("termo", termo);
+		model.addAttribute("cursos", cursoService.listar(null));
 		return "aluno/formulario";
-	}		
-	
+	}
+
 	@GetMapping("/formulario/{id}")
-	@Operation(summary = "Carrega aluno para edição")
-	public String editar(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+	@Operation(summary = "Editar aluno específico")
+	public String carregaPaginaFormulario(@PathVariable Long id, Model model,
+			RedirectAttributes redirectAttributes) {
 		try {
 			model.addAttribute("aluno", alunoService.buscarPorId(id));
-			carregarListas(model);
+			model.addAttribute("cursos", cursoService.listar(null));
 			return "aluno/formulario";
 		} catch (EntityNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
@@ -65,13 +76,15 @@ public class AlunoController {
 
 	@PostMapping("/salvar")
 	@Operation(summary = "Salvar novo aluno")
-	public String salvar(@Valid @ModelAttribute("aluno") Aluno aluno, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+	public String salvarAluno(@Valid @ModelAttribute("aluno") Aluno aluno, BindingResult result,
+			Model model, RedirectAttributes redirectAttributes) {
 		return gravar(aluno, result, model, redirectAttributes, false);
 	}
 
 	@PostMapping("/atualizar")
 	@Operation(summary = "Atualizar aluno existente")
-	public String atualizar(@Valid @ModelAttribute("aluno") Aluno aluno, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+	public String atualizarAluno(@Valid @ModelAttribute("aluno") Aluno aluno, BindingResult result,
+			Model model, RedirectAttributes redirectAttributes) {
 		if (aluno.getId() == null) {
 			result.reject("aluno.semId", "Busque um aluno antes de atualizar.");
 		}
@@ -80,10 +93,10 @@ public class AlunoController {
 
 	@PostMapping("/delete/{id}")
 	@Operation(summary = "Excluir aluno")
-	public String deletar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+	public String deleteAluno(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 		try {
 			alunoService.deletar(id);
-			redirectAttributes.addFlashAttribute("message", "Aluno excluído com sucesso!");
+			redirectAttributes.addFlashAttribute("message", "O aluno " + id + " foi apagado!");
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
 		}
@@ -109,13 +122,8 @@ public class AlunoController {
 				model.addAttribute("error", "Erro ao salvar aluno: " + e.getMessage());
 			}
 		}
-		carregarListas(model); 
+		model.addAttribute("cursos", cursoService.listar(null)); 
 		return "aluno/formulario";
-	}
-
-	private void carregarListas(Model model) {
-		model.addAttribute("lista", alunoService.listar(null));
-		model.addAttribute("cursos", cursoService.listar(null));
 	}
 
 	private Aluno alunoVazio() {
@@ -123,5 +131,4 @@ public class AlunoController {
 		aluno.setCurso(new Curso());
 		return aluno;
 	}
-
 }

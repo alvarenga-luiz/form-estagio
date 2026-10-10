@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Manter Curso')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='curso')}"></header>
+
+	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+		<h2 class="text-center mt-3"
+			th:text="${curso.id != null} ? 'Editar Curso' : 'Cadastrar Novo Curso'"></h2>
+
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<!-- BUSCAR (protótipo) -->
+		<form th:action="@{/curso/formulario}" method="get" class="row g-2 mb-4">
+			<div class="col-md-8">
+				<input type="search" name="termo" th:value="${termo}" class="form-control" placeholder="Buscar por nome ou coordenador">
+			</div>
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-secondary">buscar</button>
+				<a th:href="@{/curso/formulario}" class="btn btn-info">limpar</a>
+			</div>
+		</form>
+
+		<div th:if="${resultados != null}" class="mb-4">
+			<p class="mb-1">Foram encontrados vários cursos, escolha um:</p>
+			<ul class="list-group">
+				<li class="list-group-item" th:each="r : ${resultados}">
+					<a th:href="@{'/curso/formulario/' + ${r.id()}}">[[${r.nome()}]] - [[${r.coordenador()}]]</a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- FORMULÁRIO -->
+		<form th:object="${curso}" method="post" enctype="application/x-www-form-urlencoded">
+
+			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-2">
+					<label for="id" class="form-label">ID</label>
+					<input type="text" class="form-control" id="id" th:field="*{id}" readonly>
+				</div>
+				<div class="col-md-10">
+					<label for="nome" class="form-label">Nome</label>
+					<input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{nome}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-4">
+				<div class="col-md-12">
+					<label for="coordenador" class="form-label">Coordenador</label>
+					<input type="text" class="form-control" id="coordenador" th:field="*{coordenador}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{coordenador}"></div>
+				</div>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" th:formaction="@{/curso/salvar}" class="btn btn-primary me-2">salvar</button>
+				<button type="submit" th:formaction="@{/curso/atualizar}" class="btn btn-warning me-2">atualizar</button>
+				<button type="submit" th:if="*{id != null}"
+					th:formaction="@{/curso/delete/{id}(id=*{id})}"
+					onclick="return confirm('Deseja realmente excluir este curso?')"
+					class="btn btn-danger me-2">deletar</button>
+				<a th:href="@{/curso}" class="btn btn-secondary">Cancelar</a>
+			</div>
+		</form>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+</body>
+</html>

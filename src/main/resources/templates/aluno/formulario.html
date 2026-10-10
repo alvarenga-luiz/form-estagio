@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Manter Aluno')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='aluno')}"></header>
+
+	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+		<h2 class="text-center mt-3"
+			th:text="${aluno.id != null} ? 'Editar Aluno' : 'Cadastrar Novo Aluno'"></h2>
+
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<form th:action="@{/aluno/formulario}" method="get" class="row g-2 mb-4">
+			<div class="col-md-8">
+				<input type="search" name="termo" th:value="${termo}" class="form-control" placeholder="Buscar por RA ou nome">
+			</div>
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-secondary">buscar</button>
+				<a th:href="@{/aluno/formulario}" class="btn btn-info">limpar</a>
+			</div>
+		</form>
+
+		<div th:if="${resultados != null}" class="mb-4">
+			<p class="mb-1">Foram encontrados vários alunos, escolha um:</p>
+			<ul class="list-group">
+				<li class="list-group-item" th:each="r : ${resultados}">
+					<a th:href="@{'/aluno/formulario/' + ${r.id()}}">[[${r.ra()}]] - [[${r.nome()}]]</a>
+				</li>
+			</ul>
+		</div>
+
+		<form th:object="${aluno}" method="post" enctype="application/x-www-form-urlencoded">
+			<input type="hidden" th:field="*{id}" />
+
+			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-4">
+					<label for="ra" class="form-label">RA</label>
+					<input type="text" class="form-control" id="ra" th:field="*{ra}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{ra}"></div>
+				</div>
+				<div class="col-md-8">
+					<label for="nome" class="form-label">Nome</label>
+					<input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{nome}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-4">
+					<label for="cep" class="form-label">CEP</label>
+					<input type="text" class="form-control" id="cep" th:field="*{cep}" placeholder="00000-000" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{cep}"></div>
+				</div>
+				<div class="col-md-4">
+					<label for="dataNascimento" class="form-label">Data de Nascimento</label>
+					<input type="date" class="form-control" id="dataNascimento" th:field="*{dataNascimento}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{dataNascimento}"></div>
+				</div>
+				<div class="col-md-4">
+					<label for="dataIngresso" class="form-label">Data de Ingresso</label>
+					<input type="date" class="form-control" id="dataIngresso" th:field="*{dataIngresso}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{dataIngresso}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-4">
+				<div class="col-md-8">
+					<label for="curso" class="form-label">Curso</label>
+					<select class="form-select" id="curso" th:field="*{curso.id}"
+						th:classappend="${#fields.hasErrors('curso')} ? 'is-invalid'">
+						<option value="">Selecione...</option>
+						<option th:each="c : ${cursos}" th:value="${c.id()}" th:text="${c.nome()}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{curso}"></div>
+				</div>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" th:formaction="@{/aluno/salvar}" class="btn btn-primary me-2">salvar</button>
+				<button type="submit" th:formaction="@{/aluno/atualizar}" class="btn btn-warning me-2">atualizar</button>
+				<button type="submit" th:if="*{id != null}"
+					th:formaction="@{/aluno/delete/{id}(id=*{id})}"
+					onclick="return confirm('Deseja realmente excluir este aluno?')"
+					class="btn btn-danger me-2">deletar</button>
+				<a class="btn btn-outline-secondary disabled me-2" href="#" aria-disabled="true">+ estágio</a>
+				<a th:href="@{/aluno}" class="btn btn-secondary">Cancelar</a>
+			</div>
+		</form>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+</body>
+</html>

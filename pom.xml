@@ -14,7 +14,7 @@
     </parent>
 
 	<!-- Informações do projeto -->
-	<groupId>br.edu.fatec</groupId>
+	<groupId>app</groupId>
 	<artifactId>form-estagio</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 

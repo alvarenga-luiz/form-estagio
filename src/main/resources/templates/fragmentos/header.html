@@ -1,0 +1,53 @@
+<header th:fragment="header(activePage)">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" th:href="@{/}"> <i class="fas fa-graduation-cap me-2"></i>Estágios CPS </a>
+
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav me-auto">
+
+					<!-- Item normal -->
+					<li class="nav-item"><a class="nav-link"
+						th:classappend="${activePage == 'home'} ? 'active' : ''"
+						th:href="@{/}"> <i class="fas fa-home me-1"></i> Início
+					</a></li>
+
+					<!-- Dropdown de Alunos -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="alunosDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						th:classappend="${activePage == 'aluno'} ? 'active' : ''"
+						style="cursor: pointer;"> <i class="fas fa-user-graduate me-1"></i> Alunos
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="alunosDropdown">
+							<li><a class="dropdown-item" th:href="@{/aluno}"> <i class="fas fa-list me-1"></i> Listagem Alunos</a></li>
+							<li><a class="dropdown-item" th:href="@{/aluno/formulario}"> <i class="fas fa-plus me-1"></i> Cadastrar Aluno</a></li>
+						</ul>
+					</li>
+
+					<!-- Dropdown de Cursos -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="cursosDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						th:classappend="${activePage == 'curso'} ? 'active' : ''"
+						style="cursor: pointer;"> <i class="fas fa-book me-1"></i> Cursos
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="cursosDropdown">
+							<li><a class="dropdown-item" th:href="@{/curso}"> <i class="fas fa-list me-1"></i> Listagem Cursos</a></li>
+							<li><a class="dropdown-item" th:href="@{/curso/formulario}"> <i class="fas fa-plus me-1"></i> Cadastrar Curso</a></li>
+						</ul>
+					</li>
+
+					<!-- Estágios (será ativado no próximo módulo) -->
+					<li class="nav-item"><a class="nav-link disabled" href="#" aria-disabled="true">
+						<i class="fas fa-briefcase me-1"></i> Estágios
+					</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>

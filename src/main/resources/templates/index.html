@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Início')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='home')}"></header>
+
+	<div class="container mt-5 text-center">
+
+		<h2 class="mb-4">Controle de Estágios</h2>
+
+		<!-- Botões do protótipo -->
+		<div class="d-flex justify-content-center flex-wrap gap-3 home-botoes">
+			<!-- Quando criarmos o módulo de Estágio, troque href="#" por th:href="@{/estagio}" e remova "disabled" -->
+			<a class="btn btn-outline-dark btn-lg disabled" href="#" aria-disabled="true">Estágio</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/aluno}">Alunos</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/curso}">Curso</a>
+		</div>
+
+		<!-- Logo -->
+		<img th:src="@{/images/logo-cps.png}" alt="Centro Paula Souza"
+			class="img-fluid mt-5" style="max-width: 260px;">
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+</body>
+</html>
