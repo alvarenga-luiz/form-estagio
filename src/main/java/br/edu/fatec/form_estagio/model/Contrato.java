@@ -1,6 +1,8 @@
 package br.edu.fatec.form_estagio.model;
 
 
+import br.edu.fatec.form_estagio.dto.DadosAtualizacaoContrato;
+import br.edu.fatec.form_estagio.enums.StatusContrato;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -50,6 +52,10 @@ public class Contrato {
     @Column(name = "cargo_supervisor", nullable = false)
     private String cargoSupervisor;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusContrato status = StatusContrato.EM_ANALISE;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -57,5 +63,23 @@ public class Contrato {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void atualizarInformacoes(DadosAtualizacaoContrato dados) {
+        if (dados.status() != null) {
+            this.status = dados.status();
+        }
+        if (dados.supervisor() != null) {
+            this.status = dados.status();
+        }
+        if (dados.cargoSupervisor() != null) {
+            this.cargoSupervisor = dados.cargoSupervisor();
+        }
+        if (dados.descFuncao() != null) {
+            this.descFuncao = dados.descFuncao();
+        }
+        if (dados.cargaHoraria() != null) {
+            this.cargaHoraria = dados.cargaHoraria();
+        }
+    }
 
 }
