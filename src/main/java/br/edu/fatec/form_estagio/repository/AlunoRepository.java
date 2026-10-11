@@ -1,7 +1,8 @@
-package app.aluno;
+package br.edu.fatec.form_estagio.repository;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.model.Aluno;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

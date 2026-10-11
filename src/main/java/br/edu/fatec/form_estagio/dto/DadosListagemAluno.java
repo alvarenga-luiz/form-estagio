@@ -1,4 +1,6 @@
-package app.aluno;
+package br.edu.fatec.form_estagio.dto;
+
+import br.edu.fatec.form_estagio.model.Aluno;
 
 import java.time.LocalDate;
 

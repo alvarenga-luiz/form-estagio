@@ -1,5 +1,6 @@
-package app.aluno;
+package br.edu.fatec.form_estagio.mapper;
 
+import br.edu.fatec.form_estagio.model.Aluno;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

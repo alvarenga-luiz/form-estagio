@@ -1,7 +1,10 @@
-package app.aluno;
+package br.edu.fatec.form_estagio.controller;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.model.Aluno;
+import br.edu.fatec.form_estagio.service.AlunoService;
+import br.edu.fatec.form_estagio.dto.DadosListagemAluno;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import app.curso.Curso;
-import app.curso.CursoService;
+import br.edu.fatec.form_estagio.model.Curso;
+import br.edu.fatec.form_estagio.service.CursoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;

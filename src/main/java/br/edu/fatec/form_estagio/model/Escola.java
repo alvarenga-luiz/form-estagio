@@ -1,9 +1,8 @@
-package app.escola;
+package br.edu.fatec.form_estagio.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import app.aluno.Aluno;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

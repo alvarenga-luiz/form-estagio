@@ -1,12 +1,16 @@
-package app.curso;
+package br.edu.fatec.form_estagio.service;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.repository.CursoRepository;
+import br.edu.fatec.form_estagio.dto.DadosListagemCurso;
+import br.edu.fatec.form_estagio.mapper.CursoMapper;
+import br.edu.fatec.form_estagio.model.Curso;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import app.aluno.AlunoRepository;
+import br.edu.fatec.form_estagio.repository.AlunoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,10 @@
-package app.curso;
+package br.edu.fatec.form_estagio.controller;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.service.CursoService;
+import br.edu.fatec.form_estagio.dto.DadosListagemCurso;
+import br.edu.fatec.form_estagio.model.Curso;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
