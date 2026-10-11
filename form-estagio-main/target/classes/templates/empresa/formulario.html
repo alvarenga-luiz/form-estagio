@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Empresa</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .alert { padding: 10px; margin-bottom: 20px; font-weight: bold; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-danger { background-color: #f8d7da; color: #721c24; }
+        .search-box { background: #f1f1f1; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>DADOS DA EMPRESA</h2>
+
+    <!-- Mensagens de Sucesso ou Erro -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <!-- Mini sistema de busca (exigência da professora) -->
+    <div class="search-box">
+        <form th:action="@{/empresa/formulario}" method="get">
+            <label>Buscar empresa existente para editar (digite a Razão Social):</label>
+            <input type="text" name="termo" th:value="${termo}" placeholder="Pesquisar..." style="width: 70%; display: inline-block;"/>
+            <button type="submit" style="background-color: #6c757d;">Buscar</button>
+        </form>
+        
+        <ul th:if="${resultados != null}">
+            <li th:each="res : ${resultados}">
+                <a th:href="@{/empresa/formulario/{id}(id=${res.id})}" th:text="${res.razaoSocial} + ' - ' + ${res.cidade}"></a>
+            </li>
+        </ul>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <!-- Formulário dinâmico (Salva ou Atualiza) -->
+    <form th:action="${empresa.id == null ? '/empresa/salvar' : '/empresa/atualizar'}" th:object="${empresa}" method="post">
+        <!-- O ID fica escondido, o sistema precisa dele para saber quem atualizar -->
+        <input type="hidden" th:field="*{id}" />
+        
+        <div class="form-group"><label>Razão Social / Nome da empresa:</label>
+            <input type="text" th:field="*{razaoSocial}" required />
+            <!-- Mostra o erro do DTO aqui se a razão social for duplicada -->
+            <span th:if="${#fields.hasErrors('razaoSocial')}" th:errors="*{razaoSocial}" style="color:red;"></span>
+        </div>
+        
+        <div class="form-group"><label>Área de atuação:</label><input type="text" th:field="*{areaAtuacao}" /></div>
+        <div class="form-group"><label>Endereço:</label><input type="text" th:field="*{endereco}" /></div>
+        
+        <div class="form-group" style="display: flex; gap: 20px;">
+            <div style="flex: 1;"><label>Cidade:</label><input type="text" th:field="*{cidade}" /></div>
+            <div style="flex: 1;"><label>CEP:</label><input type="text" th:field="*{cep}" /></div>
+        </div>
+        
+        <div class="form-group" style="display: flex; gap: 20px;">
+            <div style="flex: 1;"><label>E-mail:</label><input type="text" th:field="*{email}" /></div>
+            <div style="flex: 1;"><label>Site:</label><input type="text" th:field="*{site}" /></div>
+        </div>
+        
+        <div class="form-group" style="display: flex; gap: 20px;">
+            <div style="flex: 1;"><label>Telefone:</label><input type="text" th:field="*{telefone}" /></div>
+            <div style="flex: 1;"><label>Nome do contato:</label><input type="text" th:field="*{nomeContato}" /></div>
+        </div>
+        
+        <div class="form-group" style="display: flex; gap: 20px;">
+            <div style="flex: 1;"><label>Cargo do contato:</label><input type="text" th:field="*{cargoContrato}" /></div>
+            <div style="flex: 1;"><label>Área / Departamento:</label><input type="text" th:field="*{areaDepartamento}" /></div>
+        </div>
+        
+        <div class="form-group"><label>LinkedIn:</label><input type="text" th:field="*{linkedin}" /></div>
+        
+        <button type="submit" th:text="${empresa.id == null ? 'Salvar Empresa' : 'Atualizar Empresa'}"></button>
+        <a th:href="@{/empresa}" style="margin-left: 15px; color: #007bff; text-decoration: none; font-weight: bold;">Ver Lista de Empresas ➔</a>
+    </form>
+</body>
+</html>
