@@ -1,4 +1,4 @@
-package aluno;
+package app.aluno;
 
 import jakarta.validation.constraints.NotNull;
 

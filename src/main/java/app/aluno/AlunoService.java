@@ -1,12 +1,12 @@
-package aluno;
+package app.aluno;
 
 import java.util.List;
-import curso.Curso;
-import curso.CursoRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import app.curso.Curso;
+import app.curso.CursoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package aluno;
+package app.aluno;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ public record DadosListagemAluno (
 		LocalDate dataNascimento,
 		LocalDate dataIngresso,
 		Long cursoId,
-		String cursoNome) {
+		String cursoNome, String email, String contato) {
 
 	public DadosListagemAluno(Aluno aluno) {
 		this(aluno.getId(),
@@ -21,6 +21,8 @@ public record DadosListagemAluno (
 			aluno.getDataNascimento(),
 			aluno.getDataIngresso(),
 			aluno.getCurso().getId(),
-			aluno.getCurso().getNome());
+			aluno.getCurso().getNome(),
+			aluno.getContato(),
+			aluno.getEmail());
 	}
 }

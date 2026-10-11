@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Listagem Cursos')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='curso')}"></header>
+
+	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+		<h2 class="text-center mt-3">Cursos</h2>
+
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<!-- Busca -->
+		<div class="my-3">
+			<form th:action="@{/curso}">
+				<div class="row g-2">
+					<div class="col-md-6">
+						<input id="keyword" type="search" name="keyword" th:value="${keyword}" required
+							class="form-control" placeholder="Digite o nome ou o coordenador">
+					</div>
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-secondary">Buscar</button>
+						<a th:href="@{/curso}" class="btn btn-info">Limpar</a>
+						<a th:href="@{/curso/formulario}" class="btn btn-primary">Novo</a>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div th:if="${lista.size() > 0}">
+			<table class="table table-hover table-responsive-xl">
+				<thead class="table-light">
+					<tr>
+						<th scope="col">ID</th>
+						<th scope="col">Nome</th>
+						<th scope="col">Coordenador</th>
+						<th scope="col">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="c : ${lista}">
+						<td>[[${c.id()}]]</td>
+						<td>[[${c.nome()}]]</td>
+						<td>[[${c.coordenador()}]]</td>
+						<td>
+							<a th:href="@{'/curso/formulario/' + ${c.id()}}" title="Editar o curso"
+								class="fa-regular fa-pen-to-square icon-dark"></a> &nbsp;
+							<a th:href="@{'/curso/delete/' + ${c.id()}}" th:data-nome="${c.nome()}"
+								title="Apague este curso"
+								class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:unless="${lista.size() > 0}">
+			<span>Curso não encontrado</span>
+		</div>
+	</div>
+
+	<!-- Modal de confirmação -->
+	<div class="modal fade text-center" id="confirmModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmação</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Você deseja apagar o curso <strong id="confirmNome"></strong>?
+				</div>
+				<div class="modal-footer justify-content-center">
+					<form id="formDelete" method="post">
+						<button type="submit" class="btn btn-danger">Sim</button>
+					</form>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+			document.querySelectorAll('.btn-delete').forEach(function (link) {
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					document.getElementById('confirmNome').textContent = link.dataset.nome;
+					document.getElementById('formDelete').action = link.getAttribute('href'); // POST /curso/delete/{id}
+					modal.show();
+				});
+			});
+		});
+	</script>
+</body>
+</html>

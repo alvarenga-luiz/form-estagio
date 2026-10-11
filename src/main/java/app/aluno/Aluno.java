@@ -1,10 +1,10 @@
-package aluno;
+package app.aluno;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
-import curso.Curso;
 
+import app.escola.*;
+import app.curso.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -41,11 +41,14 @@ public class Aluno implements Serializable {
 	private String cep;
 	private String contato;
 	
-	private List<Aluno> alunos;
 		
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "curso_id", nullable = false)
 	private Curso curso;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "escola_id", nullable = false)
+	private Escola escola;
 }
 
 
