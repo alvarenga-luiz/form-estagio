@@ -37,25 +37,37 @@ public class Empresa implements Serializable {
     @Column(name = "razao_social", nullable = false)
     private String razaoSocial;
 
-    @Column(name = "area_atuacao")
+    @Column(name = "area_atuacao", nullable = false)
     private String areaAtuacao;
 
+    @Column(name = "endereco", nullable = false)
     private String endereco;
+
+    @Column(name = "cidade", nullable = false)
     private String cidade;
+
+    @Column(name = "cep", nullable = false)
     private String cep;
+
+    @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "site")
     private String site;
+
+    @Column(name = "telefone", nullable = false)
     private String telefone;
 
-    @Column(name = "nome_contato")
+    @Column(name = "nome_contato", nullable = false)
     private String nomeContato;
 
-    @Column(name = "cargo_contrato")
-    private String cargoContrato;
+    @Column(name = "cargo_contato", nullable = false)
+    private String cargoContato;
 
-    @Column(name = "area_departamento")
+    @Column(name = "area_departamento", nullable = false)
     private String areaDepartamento;
-    
+
+    @Column(name = "linkedin")
     private String linkedin;
 
     @CreationTimestamp

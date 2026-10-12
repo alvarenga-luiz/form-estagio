@@ -2,6 +2,7 @@ package br.edu.fatec.form_estagio.service;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.repository.ContratoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class EmpresaService {
     
     private final EmpresaRepository empresaRepository;
+    private final ContratoRepository contratoRepository;
     private final EmpresaMapper empresaMapper;
     
     @Transactional(readOnly = true)
@@ -47,6 +49,9 @@ public class EmpresaService {
 
     @Transactional
     public void deletar(Long id) {
+        if (contratoRepository.existsByEmpresaId(id)) {
+            throw new IllegalStateException("Não foi possível excluir: a empresa possui contratos vinculados.");
+        }
         empresaRepository.delete(buscarPorId(id));
     }
 

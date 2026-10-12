@@ -13,7 +13,7 @@ public record DadosCadastroEmpresa(
     String site,
     String telefone,
     String nomeContato,
-    String cargoContrato,
+    String cargoContato,
     String areaDepartamento,
     String linkedin
 ) {

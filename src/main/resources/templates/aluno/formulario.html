@@ -6,7 +6,7 @@
 
 	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
 		<h2 class="text-center mt-3"
-			th:text="${aluno.id != null} ? 'Editar Aluno' : 'Cadastrar Novo Aluno'"></h2>
+			th:text="${edicao} ? 'Editar Aluno' : 'Cadastrar Novo Aluno'"></h2>
 
 		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
 			[[${message}]]
@@ -36,8 +36,9 @@
 			</ul>
 		</div>
 
-		<form th:object="${aluno}" method="post" enctype="application/x-www-form-urlencoded">
-			<input type="hidden" th:field="*{id}" />
+		<form th:object="${aluno}" th:action="${edicao} ? @{/aluno/atualizar} : @{/aluno/salvar}"
+			method="post" enctype="application/x-www-form-urlencoded">
+			<input th:if="${edicao}" type="hidden" th:field="*{id}" />
 
 			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
 
@@ -87,22 +88,39 @@
 				</div>
 			</div>
 
-			<div class="row g-3 mb-4">
-				<div class="col-md-8">
-					<label for="curso" class="form-label">Curso</label>
-					<select class="form-select" id="curso" th:field="*{curso.id}"
-						th:classappend="${#fields.hasErrors('curso')} ? 'is-invalid'">
+			<div class="row g-3 mb-3">
+				<div class="col-md-12">
+					<label for="idCurso" class="form-label">Curso</label>
+					<select class="form-select" id="idCurso" th:field="*{idCurso}" th:errorclass="is-invalid">
 						<option value="">Selecione...</option>
 						<option th:each="c : ${cursos}" th:value="${c.id()}" th:text="${c.nome()}"></option>
 					</select>
-					<div class="invalid-feedback" th:errors="*{curso}"></div>
+					<div class="invalid-feedback" th:errors="*{idCurso}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-4">
+				<div class="col-md-6">
+					<label for="idEscola" class="form-label">Última instituição de ensino</label>
+					<select class="form-select" id="idEscola" th:field="*{idEscola}" th:errorclass="is-invalid">
+						<option value="">Selecione...</option>
+						<option th:each="e : ${escolas}" th:value="${e.id()}" th:text="${e.nome()}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{idEscola}"></div>
+				</div>
+				<div class="col-md-6">
+					<label for="tipoEnsino" class="form-label">Tipo de ensino cursado</label>
+					<select class="form-select" id="tipoEnsino" th:field="*{tipoEnsino}" th:errorclass="is-invalid">
+						<option value="">Selecione...</option>
+						<option th:each="t : ${tiposEnsino}" th:value="${t}" th:text="${t.descricao}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{tipoEnsino}"></div>
 				</div>
 			</div>
 
 			<div class="text-center">
-				<button type="submit" th:formaction="@{/aluno/salvar}" class="btn btn-primary me-2">salvar</button>
-				<button type="submit" th:formaction="@{/aluno/atualizar}" class="btn btn-warning me-2">atualizar</button>
-				<button type="submit" th:if="*{id != null}"
+				<button type="submit" class="btn btn-primary me-2" th:text="${edicao} ? 'atualizar' : 'salvar'"></button>
+				<button type="submit" th:if="${edicao}"
 					th:formaction="@{/aluno/delete/{id}(id=*{id})}"
 					onclick="return confirm('Deseja realmente excluir este aluno?')"
 					class="btn btn-danger me-2">deletar</button>

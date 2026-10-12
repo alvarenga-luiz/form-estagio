@@ -21,6 +21,10 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
         """)
     List<Contrato> buscar(@Param("ra") String ra, @Param("razaoSocial") String razaoSocial);
 
+    boolean existsByAlunoId(Long alunoId);
+
+    boolean existsByEmpresaId(Long alunoId);
+
     boolean existsByAlunoIdAndStatusIn(Long alunoId, Collection<StatusContrato> status);
 
     boolean existsByAlunoIdAndStatusInAndIdNot(Long alunoId, Collection<StatusContrato> status, Long id);
