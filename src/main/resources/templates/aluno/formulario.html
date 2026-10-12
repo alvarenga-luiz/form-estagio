@@ -124,7 +124,7 @@
 					th:formaction="@{/aluno/delete/{id}(id=*{id})}"
 					onclick="return confirm('Deseja realmente excluir este aluno?')"
 					class="btn btn-danger me-2">deletar</button>
-				<a class="btn btn-outline-secondary disabled me-2" href="#" aria-disabled="true">+ estágio</a>
+				<a th:if="${edicao}" th:href="@{/contrato/formulario}" class="btn btn-outline-secondary me-2">+ estágio</a>
 				<a th:href="@{/aluno}" class="btn btn-secondary">Cancelar</a>
 			</div>
 		</form>

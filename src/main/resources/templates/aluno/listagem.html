@@ -46,6 +46,8 @@
 						<th scope="col">Nascimento</th>
 						<th scope="col">Ingresso</th>
 						<th scope="col">Curso</th>
+						<th scope="col">Última Escola</th>
+						<th scope="col">Tipo de Ensino</th>
 						<th scope="col">Ações</th>
 					</tr>
 				</thead>
@@ -59,6 +61,8 @@
 						<td th:text="${#temporals.format(a.dataNascimento(), 'dd/MM/yyyy')}"></td>
 						<td th:text="${#temporals.format(a.dataIngresso(), 'dd/MM/yyyy')}"></td>
 						<td>[[${a.cursoNome()}]]</td>
+						<td>[[${a.escolaNome()}]]</td>
+						<td>[[${a.tipoEnsino()}]]</td>
 						<td>
 							<a th:href="@{'/aluno/formulario/' + ${a.id()}}" title="Editar o aluno"
 								class="fa-regular fa-pen-to-square icon-dark"></a> &nbsp;

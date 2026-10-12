@@ -1,71 +1,109 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Empresas</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .btn { padding: 8px 12px; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; color: white;}
-        .btn-new { background-color: #28a745; display: inline-block; font-weight: bold;}
-        .btn-edit { background-color: #ffc107; color: black; font-weight: bold;}
-        .btn-delete { background-color: #dc3545; font-weight: bold;}
-        .alert { padding: 10px; margin-bottom: 20px; font-weight: bold;}
-        .alert-success { background-color: #d4edda; color: #155724; }
-        .alert-danger { background-color: #f8d7da; color: #721c24; }
-    </style>
-</head>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Listagem Empresas')}"></head>
 <body>
-    <h2>Empresas Cadastradas</h2>
+	<header th:replace="~{fragmentos/header :: header(activePage='empresa')}"></header>
 
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+	<div class="container-fluid" style="max-width: 1200px; margin: 0 auto;">
+		<h2 class="text-center mt-3">Empresas</h2>
 
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <a th:href="@{/empresa/formulario}" class="btn btn-new">+ Nova Empresa</a>
-        
-        <form th:action="@{/empresa}" method="get">
-            <input type="text" name="keyword" th:value="${keyword}" placeholder="Buscar por Razão Social..." style="padding: 8px; width: 250px;"/>
-            <button type="submit" style="padding: 8px 15px; background-color: #007bff; color: white; border: none;">Buscar</button>
-        </form>
-    </div>
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Razão Social</th>
-                <th>Cidade</th>
-                <th>E-mail</th>
-                <th>Telefone</th>
-                <th>Nome do Contato</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Este loop 'each' constrói uma linha na tabela para cada empresa do banco -->
-            <tr th:each="emp : ${lista}">
-                <td th:text="${emp.id}"></td>
-                <td th:text="${emp.razaoSocial}"></td>
-                <td th:text="${emp.cidade}"></td>
-                <td th:text="${emp.email}"></td>
-                <td th:text="${emp.telefone}"></td>
-                <td th:text="${emp.nomeContato}"></td>
-                <td>
-                    <a th:href="@{/empresa/formulario/{id}(id=${emp.id})}" class="btn btn-edit">Editar</a>
-                    
-                    <!-- Excluir precisa de um form (POST) por segurança -->
-                    <form th:action="@{/empresa/delete/{id}(id=${emp.id})}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja apagar esta empresa permanentemente?');">
-                        <button type="submit" class="btn btn-delete">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(lista)}">
-                <td colspan="7" style="text-align: center; color: #666; font-style: italic;">Nenhuma empresa cadastrada ou encontrada.</td>
-            </tr>
-        </tbody>
-    </table>
+		<!-- Busca -->
+		<div class="my-3">
+			<form th:action="@{/empresa}">
+				<div class="row g-2">
+					<div class="col-md-6">
+						<input id="keyword" type="search" name="keyword" th:value="${keyword}" required
+							class="form-control" placeholder="Digite a razão social">
+					</div>
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-secondary">Buscar</button>
+						<a th:href="@{/empresa}" class="btn btn-info">Limpar</a>
+						<a th:href="@{/empresa/formulario}" class="btn btn-primary">Novo</a>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div th:if="${lista.size() > 0}">
+			<table class="table table-hover table-responsive-xl">
+				<thead class="table-light">
+					<tr>
+						<th scope="col">Razão Social</th>
+						<th scope="col">Cidade</th>
+						<th scope="col">E-mail</th>
+						<th scope="col">Telefone</th>
+						<th scope="col">Contato</th>
+						<th scope="col">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="e : ${lista}">
+						<td>[[${e.razaoSocial()}]]</td>
+						<td>[[${e.cidade()}]]</td>
+						<td>[[${e.email()}]]</td>
+						<td>[[${e.telefone()}]]</td>
+						<td>[[${e.nomeContato()}]]</td>
+						<td>
+							<a th:href="@{'/empresa/formulario/' + ${e.id()}}" title="Editar a empresa"
+								class="fa-regular fa-pen-to-square icon-dark"></a> &nbsp;
+							<a th:href="@{'/empresa/delete/' + ${e.id()}}" th:data-nome="${e.razaoSocial()}"
+								title="Apague esta empresa"
+								class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:unless="${lista.size() > 0}">
+			<span>Nenhuma empresa encontrada</span>
+		</div>
+	</div>
+
+	<!-- Modal de confirmação -->
+	<div class="modal fade text-center" id="confirmModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmação</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Você deseja apagar a empresa <strong id="confirmNome"></strong>?
+				</div>
+				<div class="modal-footer justify-content-center">
+					<form id="formDelete" method="post">
+						<button type="submit" class="btn btn-danger">Sim</button>
+					</form>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+			document.querySelectorAll('.btn-delete').forEach(function (link) {
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					document.getElementById('confirmNome').textContent = link.dataset.nome;
+					document.getElementById('formDelete').action = link.getAttribute('href'); // POST /empresa/delete/{id}
+					modal.show();
+				});
+			});
+		});
+	</script>
 </body>
 </html>

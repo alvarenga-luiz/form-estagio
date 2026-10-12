@@ -3,11 +3,14 @@ package br.edu.fatec.form_estagio.service;
 import java.util.List;
 
 import br.edu.fatec.form_estagio.repository.ContratoRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.fatec.form_estagio.mapper.EmpresaMapper;
 import br.edu.fatec.form_estagio.model.Empresa;
+import br.edu.fatec.form_estagio.dto.DadosAtualizacaoEmpresa;
+import br.edu.fatec.form_estagio.dto.DadosCadastroEmpresa;
 import br.edu.fatec.form_estagio.dto.DadosListagemEmpresa;
 import br.edu.fatec.form_estagio.repository.EmpresaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +26,7 @@ public class EmpresaService {
     
     @Transactional(readOnly = true)
     public List<DadosListagemEmpresa> listar(String termo) {
-        List<Empresa> empresas = (termo == null || termo.isBlank()) ? empresaRepository.findAll() : empresaRepository.buscar(termo.trim());
+        List<Empresa> empresas = (termo == null || termo.isBlank()) ? empresaRepository.findAll(Sort.by("razaoSocial").ascending()) : empresaRepository.buscar(termo.trim());
         return empresas.stream().map(DadosListagemEmpresa::new).toList();
     }
 
@@ -32,18 +35,22 @@ public class EmpresaService {
         return empresaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Empresa não encontrada com ID: " + id));
     }
 
-    @Transactional
-    public Empresa criar(Empresa empresa) {
-        empresa.setId(null);
-        validarRazaoSocialUnica(empresa);
-        return empresaRepository.save(empresa);
+    @Transactional(readOnly = true)
+    public DadosAtualizacaoEmpresa buscarParaEdicao(Long id) {
+        return empresaMapper.toAtualizacao(buscarPorId(id));
     }
 
     @Transactional
-    public Empresa atualizar(Empresa form) {
-        Empresa existente = buscarPorId(form.getId());
-        validarRazaoSocialUnica(form);
-        empresaMapper.atualizar(form, existente);
+    public Empresa criar(DadosCadastroEmpresa dados) {
+        validarRazaoSocialUnica(dados.razaoSocial(), null);
+        return empresaRepository.save(empresaMapper.toEntity(dados));
+    }
+
+    @Transactional
+    public Empresa atualizar(DadosAtualizacaoEmpresa dados) {
+        Empresa existente = buscarPorId(dados.id());
+        validarRazaoSocialUnica(dados.razaoSocial(), dados.id());
+        empresaMapper.atualizar(dados, existente);
         return empresaRepository.save(existente);
     }
 
@@ -55,9 +62,9 @@ public class EmpresaService {
         empresaRepository.delete(buscarPorId(id));
     }
 
-    private void validarRazaoSocialUnica(Empresa empresa) {
-        String razaoSocial = empresa.getRazaoSocial().trim();
-        boolean duplicado = (empresa.getId() == null) ? empresaRepository.existsByRazaoSocial(razaoSocial) : empresaRepository.existsByRazaoSocialAndIdNot(razaoSocial, empresa.getId());
+    private void validarRazaoSocialUnica(String razaoSocial, Long empresaId) {
+        String razaoSocialLimpa = razaoSocial.trim();
+        boolean duplicado = (empresaId == null) ? empresaRepository.existsByRazaoSocialIgnoreCase(razaoSocialLimpa) : empresaRepository.existsByRazaoSocialIgnoreCaseAndIdNot(razaoSocialLimpa, empresaId);
         
         if (duplicado) {
             throw new IllegalStateException("Já existe uma empresa cadastrada com esta Razão Social.");

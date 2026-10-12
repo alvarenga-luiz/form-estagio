@@ -2,9 +2,11 @@ package br.edu.fatec.form_estagio.controller;
 
 import java.util.List;
 
-import br.edu.fatec.form_estagio.service.CursoService;
+import br.edu.fatec.form_estagio.dto.DadosAtualizacaoCurso;
+import br.edu.fatec.form_estagio.dto.DadosCadastroCurso;
 import br.edu.fatec.form_estagio.dto.DadosListagemCurso;
 import br.edu.fatec.form_estagio.model.Curso;
+import br.edu.fatec.form_estagio.service.CursoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,12 +43,13 @@ public class CursoController {
 	@GetMapping("/formulario")
 	@Operation(summary = "Novo curso / buscar curso")
 	public String novoCurso(@RequestParam(required = false) String termo, Model model) {
-		Curso curso = new Curso();
+		model.addAttribute("termo", termo);
 
 		if (termo != null && !termo.isBlank()) {
 			List<DadosListagemCurso> resultados = cursoService.listar(termo);
 			if (resultados.size() == 1) {
-				curso = cursoService.buscarPorId(resultados.get(0).id());
+				model.addAttribute("curso", cursoService.buscarParaEdicao(resultados.get(0).id()));
+				return paginaFormulario(model, true);
 			} else if (resultados.isEmpty()) {
 				model.addAttribute("error", "Nenhum curso encontrado para '" + termo + "'.");
 			} else {
@@ -54,9 +57,8 @@ public class CursoController {
 			}
 		}
 
-		model.addAttribute("curso", curso);
-		model.addAttribute("termo", termo);
-		return "curso/formulario";
+		model.addAttribute("curso", DadosCadastroCurso.vazio());
+		return paginaFormulario(model, false);
 	}
 
 	@GetMapping("/formulario/{id}")
@@ -64,8 +66,8 @@ public class CursoController {
 	public String carregaPaginaFormulario(@PathVariable Long id, Model model,
 			RedirectAttributes redirectAttributes) {
 		try {
-			model.addAttribute("curso", cursoService.buscarPorId(id));
-			return "curso/formulario";
+			model.addAttribute("curso", cursoService.buscarParaEdicao(id));
+			return paginaFormulario(model, true);
 		} catch (EntityNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
 			return "redirect:/curso";
@@ -74,19 +76,38 @@ public class CursoController {
 
 	@PostMapping("/salvar")
 	@Operation(summary = "Salvar novo curso")
-	public String salvarCurso(@Valid @ModelAttribute("curso") Curso curso, BindingResult result,
+	public String salvarCurso(@Valid @ModelAttribute("curso") DadosCadastroCurso dados, BindingResult result,
 			Model model, RedirectAttributes redirectAttributes) {
-		return gravar(curso, result, model, redirectAttributes, false);
+		if (!result.hasErrors()) {
+			try {
+				Curso salvo = cursoService.criar(dados);
+				redirectAttributes.addFlashAttribute("message", "Curso '" + salvo.getNome() + "' cadastrado com sucesso!");
+				return "redirect:/curso";
+			} catch (IllegalStateException e) {
+				result.rejectValue("nome", "nome.duplicado", e.getMessage());
+			} catch (Exception e) {
+				model.addAttribute("error", "Erro ao salvar curso: " + e.getMessage());
+			}
+		}
+		return paginaFormulario(model, false);
 	}
 
 	@PostMapping("/atualizar")
 	@Operation(summary = "Atualizar curso existente")
-	public String atualizarCurso(@Valid @ModelAttribute("curso") Curso curso, BindingResult result,
+	public String atualizarCurso(@Valid @ModelAttribute("curso") DadosAtualizacaoCurso dados, BindingResult result,
 			Model model, RedirectAttributes redirectAttributes) {
-		if (curso.getId() == null) {
-			result.reject("curso.semId", "Busque um curso antes de atualizar.");
+		if (!result.hasErrors()) {
+			try {
+				Curso salvo = cursoService.atualizar(dados);
+				redirectAttributes.addFlashAttribute("message", "Curso '" + salvo.getNome() + "' atualizado com sucesso!");
+				return "redirect:/curso";
+			} catch (IllegalStateException e) {
+				result.rejectValue("nome", "nome.duplicado", e.getMessage());
+			} catch (Exception e) {
+				model.addAttribute("error", "Erro ao atualizar curso: " + e.getMessage());
+			}
 		}
-		return gravar(curso, result, model, redirectAttributes, true);
+		return paginaFormulario(model, true);
 	}
 
 	@PostMapping("/delete/{id}")
@@ -101,21 +122,8 @@ public class CursoController {
 		return "redirect:/curso";
 	}
 
-	private String gravar(Curso curso, BindingResult result, Model model,
-			RedirectAttributes redirectAttributes, boolean atualizando) {
-
-		if (!result.hasErrors()) {
-			try {
-				Curso salvo = atualizando ? cursoService.atualizar(curso) : cursoService.criar(curso);
-				redirectAttributes.addFlashAttribute("message", "Curso '" + salvo.getNome()
-						+ (atualizando ? "' atualizado" : "' criado") + " com sucesso!");
-				return "redirect:/curso";
-			} catch (IllegalStateException e) { 
-				result.rejectValue("nome", "nome.duplicado", e.getMessage());
-			} catch (Exception e) {
-				model.addAttribute("error", "Erro ao salvar curso: " + e.getMessage());
-			}
-		}
-		return "curso/formulario"; 
+	private String paginaFormulario(Model model, boolean edicao) {
+		model.addAttribute("edicao", edicao);
+		return "curso/formulario";
 	}
 }

@@ -2,6 +2,8 @@ package br.edu.fatec.form_estagio.controller;
 
 import java.util.List;
 
+import br.edu.fatec.form_estagio.dto.DadosAtualizacaoEscola;
+import br.edu.fatec.form_estagio.dto.DadosCadastroEscola;
 import br.edu.fatec.form_estagio.dto.DadosListagemEscola;
 import br.edu.fatec.form_estagio.model.Escola;
 import br.edu.fatec.form_estagio.service.EscolaService;
@@ -39,14 +41,15 @@ public class EscolaController {
 	}
 
 	@GetMapping("/formulario")
-	@Operation(summary = "Nova Escola / buscar Escola")
+	@Operation(summary = "Nova escola / buscar escola")
 	public String novaEscola(@RequestParam(required = false) String termo, Model model) {
-		Escola escola = new Escola();
+		model.addAttribute("termo", termo);
 
 		if (termo != null && !termo.isBlank()) {
 			List<DadosListagemEscola> resultados = escolaService.listar(termo);
 			if (resultados.size() == 1) {
-				escola = escolaService.buscarPorId(resultados.get(0).id());
+				model.addAttribute("escola", escolaService.buscarParaEdicao(resultados.get(0).id()));
+				return paginaFormulario(model, true);
 			} else if (resultados.isEmpty()) {
 				model.addAttribute("error", "Nenhuma escola encontrada para '" + termo + "'.");
 			} else {
@@ -54,9 +57,8 @@ public class EscolaController {
 			}
 		}
 
-		model.addAttribute("escola", escola);
-		model.addAttribute("termo", termo);
-		return "escola/formulario";
+		model.addAttribute("escola", DadosCadastroEscola.vazio());
+		return paginaFormulario(model, false);
 	}
 
 	@GetMapping("/formulario/{id}")
@@ -64,8 +66,8 @@ public class EscolaController {
 	public String carregaPaginaFormulario(@PathVariable Long id, Model model,
 			RedirectAttributes redirectAttributes) {
 		try {
-			model.addAttribute("escola", escolaService.buscarPorId(id));
-			return "escola/formulario";
+			model.addAttribute("escola", escolaService.buscarParaEdicao(id));
+			return paginaFormulario(model, true);
 		} catch (EntityNotFoundException e) {
 			redirectAttributes.addFlashAttribute("error", e.getMessage());
 			return "redirect:/escola";
@@ -74,19 +76,38 @@ public class EscolaController {
 
 	@PostMapping("/salvar")
 	@Operation(summary = "Salvar nova escola")
-	public String salvarEscola(@Valid @ModelAttribute("escola") Escola escola, BindingResult result,
+	public String salvarEscola(@Valid @ModelAttribute("escola") DadosCadastroEscola dados, BindingResult result,
 			Model model, RedirectAttributes redirectAttributes) {
-		return gravar(escola, result, model, redirectAttributes, false);
+		if (!result.hasErrors()) {
+			try {
+				Escola salvo = escolaService.criar(dados);
+				redirectAttributes.addFlashAttribute("message", "Escola '" + salvo.getNome() + "' cadastrada com sucesso!");
+				return "redirect:/escola";
+			} catch (IllegalStateException e) {
+				result.rejectValue("nome", "nome.duplicado", e.getMessage());
+			} catch (Exception e) {
+				model.addAttribute("error", "Erro ao salvar escola: " + e.getMessage());
+			}
+		}
+		return paginaFormulario(model, false);
 	}
 
 	@PostMapping("/atualizar")
 	@Operation(summary = "Atualizar escola existente")
-	public String atualizarEscola(@Valid @ModelAttribute("escola") Escola escola, BindingResult result,
+	public String atualizarEscola(@Valid @ModelAttribute("escola") DadosAtualizacaoEscola dados, BindingResult result,
 			Model model, RedirectAttributes redirectAttributes) {
-		if (escola.getId() == null) {
-			result.reject("escola.semId", "Busque uma escola antes de atualizar.");
+		if (!result.hasErrors()) {
+			try {
+				Escola salvo = escolaService.atualizar(dados);
+				redirectAttributes.addFlashAttribute("message", "Escola '" + salvo.getNome() + "' atualizada com sucesso!");
+				return "redirect:/escola";
+			} catch (IllegalStateException e) {
+				result.rejectValue("nome", "nome.duplicado", e.getMessage());
+			} catch (Exception e) {
+				model.addAttribute("error", "Erro ao atualizar escola: " + e.getMessage());
+			}
 		}
-		return gravar(escola, result, model, redirectAttributes, true);
+		return paginaFormulario(model, true);
 	}
 
 	@PostMapping("/delete/{id}")
@@ -101,22 +122,8 @@ public class EscolaController {
 		return "redirect:/escola";
 	}
 
-	private String gravar(Escola escola, BindingResult result, Model model,
-			RedirectAttributes redirectAttributes, boolean atualizando) {
-
-		if (!result.hasErrors()) {
-			try {
-				Escola salvo = atualizando ? escolaService.atualizar(escola) : escolaService.criar(escola);
-				redirectAttributes.addFlashAttribute("message", "Escola '" + salvo.getNome()
-						+ (atualizando ? "' atualizado" : "' criado") + " com sucesso!");
-				return "redirect:/escola";
-			} catch (IllegalStateException e) {
-				result.rejectValue("nome", "nome.duplicado", e.getMessage());
-			} catch (Exception e) {
-				model.addAttribute("error", "Erro ao salvar escola: " + e.getMessage());
-			}
-		}
+	private String paginaFormulario(Model model, boolean edicao) {
+		model.addAttribute("edicao", edicao);
 		return "escola/formulario";
 	}
-
 }

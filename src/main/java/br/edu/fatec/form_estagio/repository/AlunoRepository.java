@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long> {
-	@Query("SELECT a FROM Aluno a JOIN FETCH a.curso ORDER BY a.nome")
+	@Query("SELECT a FROM Aluno a JOIN FETCH a.curso JOIN FETCH a.escola ORDER BY a.nome")
 	List<Aluno> findAllComCurso();	
 	
-	@Query("SELECT a FROM Aluno a JOIN FETCH a.curso WHERE a.ra = :termo OR LOWER(a.nome) LIKE LOWER(CONCAT('%', :termo, '%'))ORDER BY a.nome ") List<Aluno> buscar(@Param("termo") String termo);
+	@Query("SELECT a FROM Aluno a JOIN FETCH a.curso JOIN FETCH a.escola WHERE a.ra = :termo OR LOWER(a.nome) LIKE LOWER(CONCAT('%', :termo, '%'))ORDER BY a.nome ") List<Aluno> buscar(@Param("termo") String termo);
 
 	boolean existsByRa(String ra);
 

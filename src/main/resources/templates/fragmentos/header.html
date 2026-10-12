@@ -42,10 +42,44 @@
 						</ul>
 					</li>
 
-					<!-- Estágios (será ativado no próximo módulo) -->
-					<li class="nav-item"><a class="nav-link disabled" href="#" aria-disabled="true">
-						<i class="fas fa-briefcase me-1"></i> Estágios
-					</a></li>
+					<!-- Dropdown de Escolas -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="escolasDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						th:classappend="${activePage == 'escola'} ? 'active' : ''"
+						style="cursor: pointer;"> <i class="fas fa-school me-1"></i> Escolas
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="escolasDropdown">
+							<li><a class="dropdown-item" th:href="@{/escola}"> <i class="fas fa-list me-1"></i> Listagem Escolas</a></li>
+							<li><a class="dropdown-item" th:href="@{/escola/formulario}"> <i class="fas fa-plus me-1"></i> Cadastrar Escola</a></li>
+						</ul>
+					</li>
+
+					<!-- Dropdown de Empresas -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="empresasDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						th:classappend="${activePage == 'empresa'} ? 'active' : ''"
+						style="cursor: pointer;"> <i class="fas fa-building me-1"></i> Empresas
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="empresasDropdown">
+							<li><a class="dropdown-item" th:href="@{/empresa}"> <i class="fas fa-list me-1"></i> Listagem Empresas</a></li>
+							<li><a class="dropdown-item" th:href="@{/empresa/formulario}"> <i class="fas fa-plus me-1"></i> Cadastrar Empresa</a></li>
+						</ul>
+					</li>
+
+					<!-- Dropdown de Estágios -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="contratosDropdown" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						th:classappend="${activePage == 'contrato'} ? 'active' : ''"
+						style="cursor: pointer;"> <i class="fas fa-briefcase me-1"></i> Estágios
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="contratosDropdown">
+							<li><a class="dropdown-item" th:href="@{/contrato}"> <i class="fas fa-list me-1"></i> Listagem Contratos</a></li>
+							<li><a class="dropdown-item" th:href="@{/contrato/formulario}"> <i class="fas fa-plus me-1"></i> Cadastrar Contrato</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</div>

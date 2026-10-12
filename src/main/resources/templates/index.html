@@ -10,14 +10,15 @@
 
 		<!-- Botões do protótipo -->
 		<div class="d-flex justify-content-center flex-wrap gap-3 home-botoes">
-			<!-- Quando criarmos o módulo de Estágio, troque href="#" por th:href="@{/estagio}" e remova "disabled" -->
-			<a class="btn btn-outline-dark btn-lg disabled" href="#" aria-disabled="true">Estágio</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/contrato}">Estágios</a>
 			<a class="btn btn-outline-dark btn-lg" th:href="@{/aluno}">Alunos</a>
-			<a class="btn btn-outline-dark btn-lg" th:href="@{/curso}">Curso</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/empresa}">Empresas</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/curso}">Cursos</a>
+			<a class="btn btn-outline-dark btn-lg" th:href="@{/escola}">Escolas</a>
 		</div>
 
 		<!-- Logo -->
-		<img th:src="@{/images/logo-cps.png}" alt="Centro Paula Souza"
+		<img th:src="@{/images/images.png}" alt="Centro Paula Souza"
 			class="img-fluid mt-5" style="max-width: 260px;">
 	</div>
 

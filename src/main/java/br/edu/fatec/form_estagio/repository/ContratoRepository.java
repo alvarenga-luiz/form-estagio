@@ -23,7 +23,7 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 
     boolean existsByAlunoId(Long alunoId);
 
-    boolean existsByEmpresaId(Long alunoId);
+    boolean existsByEmpresaId(Long empresaId);
 
     boolean existsByAlunoIdAndStatusIn(Long alunoId, Collection<StatusContrato> status);
 

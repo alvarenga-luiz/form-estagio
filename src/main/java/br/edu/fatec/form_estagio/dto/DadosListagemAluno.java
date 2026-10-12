@@ -13,7 +13,9 @@ public record DadosListagemAluno (
 		LocalDate dataNascimento,
 		LocalDate dataIngresso,
 		Long cursoId,
-		String cursoNome, String email, String contato) {
+		String cursoNome, String email, String contato,
+		String escolaNome,
+		String tipoEnsino) {
 
 	public DadosListagemAluno(Aluno aluno) {
 		this(aluno.getId(),
@@ -25,6 +27,8 @@ public record DadosListagemAluno (
 			aluno.getCurso().getId(),
 			aluno.getCurso().getNome(),
 			aluno.getEmail(),
-			aluno.getContato());
+			aluno.getContato(),
+			aluno.getEscola().getNome(),
+			aluno.getTipoEnsino().getDescricao());
 	}
 }

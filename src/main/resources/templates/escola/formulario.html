@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Manter Escola')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='escola')}"></header>
+
+	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+		<h2 class="text-center mt-3"
+			th:text="${edicao} ? 'Editar Escola' : 'Cadastrar Nova Escola'"></h2>
+
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<!-- BUSCAR (protótipo) -->
+		<form th:action="@{/escola/formulario}" method="get" class="row g-2 mb-4">
+			<div class="col-md-8">
+				<input type="search" name="termo" th:value="${termo}" class="form-control" placeholder="Buscar por nome da escola">
+			</div>
+			<div class="col-md-4">
+				<button type="submit" class="btn btn-secondary">buscar</button>
+				<a th:href="@{/escola/formulario}" class="btn btn-info">limpar</a>
+			</div>
+		</form>
+
+		<div th:if="${resultados != null}" class="mb-4">
+			<p class="mb-1">Foram encontradas várias escolas, escolha uma:</p>
+			<ul class="list-group">
+				<li class="list-group-item" th:each="r : ${resultados}">
+					<a th:href="@{'/escola/formulario/' + ${r.id()}}">[[${r.nome()}]] - [[${r.rua()}]], [[${r.numero()}]]</a>
+				</li>
+			</ul>
+		</div>
+
+		<!-- FORMULÁRIO -->
+		<form th:object="${escola}" th:action="${edicao} ? @{/escola/atualizar} : @{/escola/salvar}"
+			method="post" enctype="application/x-www-form-urlencoded">
+			<input th:if="${edicao}" type="hidden" th:field="*{id}" />
+
+			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-12">
+					<label for="nome" class="form-label">Nome</label>
+					<input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{nome}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-4">
+				<div class="col-md-3">
+					<label for="cep" class="form-label">CEP</label>
+					<input type="text" class="form-control" id="cep" th:field="*{cep}" placeholder="00000-000" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{cep}"></div>
+				</div>
+				<div class="col-md-7">
+					<label for="rua" class="form-label">Rua</label>
+					<input type="text" class="form-control" id="rua" th:field="*{rua}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{rua}"></div>
+				</div>
+				<div class="col-md-2">
+					<label for="numero" class="form-label">Número</label>
+					<input type="text" class="form-control" id="numero" th:field="*{numero}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{numero}"></div>
+				</div>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary me-2" th:text="${edicao} ? 'atualizar' : 'salvar'"></button>
+				<button type="submit" th:if="${edicao}"
+					th:formaction="@{/escola/delete/{id}(id=*{id})}"
+					onclick="return confirm('Deseja realmente excluir esta escola?')"
+					class="btn btn-danger me-2">deletar</button>
+				<a th:href="@{/escola}" class="btn btn-secondary">Cancelar</a>
+			</div>
+		</form>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+</body>
+</html>

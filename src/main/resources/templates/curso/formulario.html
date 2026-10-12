@@ -6,7 +6,7 @@
 
 	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
 		<h2 class="text-center mt-3"
-			th:text="${curso.id != null} ? 'Editar Curso' : 'Cadastrar Novo Curso'"></h2>
+			th:text="${edicao} ? 'Editar Curso' : 'Cadastrar Novo Curso'"></h2>
 
 		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
 			[[${message}]]
@@ -38,16 +38,14 @@
 		</div>
 
 		<!-- FORMULÁRIO -->
-		<form th:object="${curso}" method="post" enctype="application/x-www-form-urlencoded">
+		<form th:object="${curso}" th:action="${edicao} ? @{/curso/atualizar} : @{/curso/salvar}"
+			method="post" enctype="application/x-www-form-urlencoded">
+			<input th:if="${edicao}" type="hidden" th:field="*{id}" />
 
 			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
 
 			<div class="row g-3 mb-3">
-				<div class="col-md-2">
-					<label for="id" class="form-label">ID</label>
-					<input type="text" class="form-control" id="id" th:field="*{id}" readonly>
-				</div>
-				<div class="col-md-10">
+				<div class="col-md-12">
 					<label for="nome" class="form-label">Nome</label>
 					<input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorclass="is-invalid">
 					<div class="invalid-feedback" th:errors="*{nome}"></div>
@@ -63,9 +61,8 @@
 			</div>
 
 			<div class="text-center">
-				<button type="submit" th:formaction="@{/curso/salvar}" class="btn btn-primary me-2">salvar</button>
-				<button type="submit" th:formaction="@{/curso/atualizar}" class="btn btn-warning me-2">atualizar</button>
-				<button type="submit" th:if="*{id != null}"
+				<button type="submit" class="btn btn-primary me-2" th:text="${edicao} ? 'atualizar' : 'salvar'"></button>
+				<button type="submit" th:if="${edicao}"
 					th:formaction="@{/curso/delete/{id}(id=*{id})}"
 					onclick="return confirm('Deseja realmente excluir este curso?')"
 					class="btn btn-danger me-2">deletar</button>

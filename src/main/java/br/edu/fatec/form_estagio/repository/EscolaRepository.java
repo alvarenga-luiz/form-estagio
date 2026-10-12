@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EscolaRepository extends JpaRepository<Escola, Long> {
 
-    @Query("SELECT e FROM Escola e WHERE LOWER(e.nome) LIKE LOWER(CONCAT('%', :termo, '%'))")
+    @Query("SELECT e FROM Escola e WHERE LOWER(e.nome) LIKE LOWER(CONCAT('%', :termo, '%')) ORDER BY e.nome")
     List<Escola> buscar(@Param("termo") String termo);
 
     boolean existsByNomeIgnoreCase(String nome);

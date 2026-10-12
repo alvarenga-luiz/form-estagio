@@ -12,9 +12,9 @@ import br.edu.fatec.form_estagio.model.Empresa;
 @Repository
 public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     
-    @Query("SELECT e FROM Empresa e WHERE e.razaoSocial = :termo OR LOWER(e.razaoSocial) LIKE LOWER(CONCAT('%', :termo, '%')) ORDER BY e.razaoSocial") 
+    @Query("SELECT e FROM Empresa e WHERE LOWER(e.razaoSocial) LIKE LOWER(CONCAT('%', :termo, '%')) ORDER BY e.razaoSocial") 
     List<Empresa> buscar(@Param("termo") String termo);
     
-    boolean existsByRazaoSocial(String razaoSocial);
-    boolean existsByRazaoSocialAndIdNot(String razaoSocial, Long id);
+    boolean existsByRazaoSocialIgnoreCase(String razaoSocial);
+    boolean existsByRazaoSocialIgnoreCaseAndIdNot(String razaoSocial, Long id);
 }
