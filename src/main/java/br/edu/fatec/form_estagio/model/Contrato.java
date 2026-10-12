@@ -1,22 +1,26 @@
 package br.edu.fatec.form_estagio.model;
 
 
-import br.edu.fatec.form_estagio.dto.DadosAtualizacaoContrato;
 import br.edu.fatec.form_estagio.enums.StatusContrato;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "contrato")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Contrato {
 
     @Id
@@ -63,23 +67,5 @@ public class Contrato {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-//    public void atualizarInformacoes(DadosAtualizacaoContrato dados) {
-//        if (dados.status() != null) {
-//            this.status = dados.status();
-//        }
-//        if (dados.supervisor() != null) {
-//            this.supervisor = dados.supervisor();
-//        }
-//        if (dados.cargoSupervisor() != null) {
-//            this.cargoSupervisor = dados.cargoSupervisor();
-//        }
-//        if (dados.descFuncao() != null) {
-//            this.descFuncao = dados.descFuncao();
-//        }
-//        if (dados.cargaHoraria() != null) {
-//            this.cargaHoraria = dados.cargaHoraria();
-//        }
-//    }
 
 }

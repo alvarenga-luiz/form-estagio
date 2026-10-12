@@ -24,7 +24,7 @@ public record DadosListagemAluno (
 			aluno.getDataIngresso(),
 			aluno.getCurso().getId(),
 			aluno.getCurso().getNome(),
-			aluno.getContato(),
-			aluno.getEmail());
+			aluno.getEmail(),
+			aluno.getContato());
 	}
 }

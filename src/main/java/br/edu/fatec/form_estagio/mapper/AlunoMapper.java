@@ -8,6 +8,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface AlunoMapper {
 	@Mapping(target = "id", ignore = true)    
-	@Mapping(target = "curso", ignore = true) 
+	@Mapping(target = "curso", ignore = true)
+	@Mapping(target = "escola", ignore = true)
 	void atualizar(Aluno origem, @MappingTarget Aluno destino);
 }

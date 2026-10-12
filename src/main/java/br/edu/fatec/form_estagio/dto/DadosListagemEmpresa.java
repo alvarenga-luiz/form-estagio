@@ -1,4 +1,6 @@
-package br.edu.fatec.form_estagio.model;
+package br.edu.fatec.form_estagio.dto;
+
+import br.edu.fatec.form_estagio.model.Empresa;
 
 public record DadosListagemEmpresa(
     Long id,

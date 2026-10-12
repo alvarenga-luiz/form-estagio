@@ -27,9 +27,9 @@ public class Escola {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;	
+	private Long id;
 	private String nome;
-	private int cep;
+	private String cep;
 	private String rua;
 	private String numero;
 	private String tipoEnsino /*se é técnico ou regular luiz*/;

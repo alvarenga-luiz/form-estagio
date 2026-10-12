@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Listagem Contratos')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='contrato')}"></header>
+
+	<div class="container-fluid" style="max-width: 1200px; margin: 0 auto;">
+		<h2 class="text-center mt-3">Contratos</h2>
+
+		<div th:if="${message != null}" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+			[[${message}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<!-- Busca -->
+		<div class="my-3">
+			<form th:action="@{/contrato}">
+				<div class="row g-2">
+					<div class="col-md-3">
+						<input id="ra" type="search" name="ra" th:value="${ra}"
+							class="form-control" placeholder="RA do aluno">
+					</div>
+					<div class="col-md-4">
+						<input id="razaoSocial" type="search" name="razaoSocial" th:value="${razaoSocial}"
+							class="form-control" placeholder="Razão social da empresa">
+					</div>
+					<div class="col-md-5">
+						<button type="submit" class="btn btn-secondary">Buscar</button>
+						<a th:href="@{/contrato}" class="btn btn-info">Limpar</a>
+						<a th:href="@{/contrato/formulario}" class="btn btn-primary">Novo</a>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<!-- Tabela -->
+		<div th:if="${lista.size() > 0}" class="table-responsive">
+			<table class="table table-hover">
+				<thead class="table-light">
+					<tr>
+						<th scope="col">Aluno</th>
+						<th scope="col">Empresa</th>
+						<th scope="col">Início</th>
+						<th scope="col">Término</th>
+						<th scope="col">Status</th>
+						<th scope="col">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="c : ${lista}">
+						<td>[[${c.nomeAluno()}]]</td>
+						<td>[[${c.nomeEmpresa()}]]</td>
+						<td th:text="${#temporals.format(c.dataInicio(), 'dd/MM/yyyy')}"></td>
+						<td th:text="${#temporals.format(c.dataFim(), 'dd/MM/yyyy')}"></td>
+						<td>[[${c.status()}]]</td>
+						<td>
+							<a th:href="@{'/contrato/formulario/' + ${c.id()}}" title="Editar o contrato"
+								class="fa-regular fa-pen-to-square icon-dark"></a> &nbsp;
+							<a th:href="@{'/contrato/delete/' + ${c.id()}}"
+								th:data-nome="${c.nomeAluno() + ' / ' + c.nomeEmpresa()}"
+								title="Apague este contrato"
+								class="fa-regular fa-trash-can icon-dark btn-delete"></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div th:unless="${lista.size() > 0}">
+			<span>Nenhum contrato encontrado</span>
+		</div>
+	</div>
+
+	<!-- Modal de confirmação -->
+	<div class="modal fade text-center" id="confirmModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmação</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Você deseja apagar o contrato <strong id="confirmNome"></strong>?
+				</div>
+				<div class="modal-footer justify-content-center">
+					<form id="formDelete" method="post">
+						<button type="submit" class="btn btn-danger">Sim</button>
+					</form>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+			document.querySelectorAll('.btn-delete').forEach(function (link) {
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					document.getElementById('confirmNome').textContent = link.dataset.nome;
+					document.getElementById('formDelete').action = link.getAttribute('href'); // POST /contrato/delete/{id}
+					modal.show();
+				});
+			});
+		});
+	</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package br.edu.fatec.form_estagio.model;
+package br.edu.fatec.form_estagio.dto;
 
 import jakarta.validation.constraints.NotNull;
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.fatec.form_estagio.model.Empresa;
-import br.edu.fatec.form_estagio.model.DadosListagemEmpresa;
+import br.edu.fatec.form_estagio.dto.DadosListagemEmpresa;
 import br.edu.fatec.form_estagio.service.EmpresaService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;

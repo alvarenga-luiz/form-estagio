@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.edu.fatec.form_estagio.mapper.EmpresaMapper;
 import br.edu.fatec.form_estagio.model.Empresa;
-import br.edu.fatec.form_estagio.model.DadosListagemEmpresa;
+import br.edu.fatec.form_estagio.dto.DadosListagemEmpresa;
 import br.edu.fatec.form_estagio.repository.EmpresaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
