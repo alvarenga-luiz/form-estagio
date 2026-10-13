@@ -42,6 +42,7 @@
 			<table class="table table-hover">
 				<thead class="table-light">
 					<tr>
+						<th scope="col">RA</th>
 						<th scope="col">Aluno</th>
 						<th scope="col">Empresa</th>
 						<th scope="col">Início</th>
@@ -52,11 +53,12 @@
 				</thead>
 				<tbody>
 					<tr th:each="c : ${lista}">
+						<td>[[${c.raAluno()}]]</td>
 						<td>[[${c.nomeAluno()}]]</td>
 						<td>[[${c.nomeEmpresa()}]]</td>
 						<td th:text="${#temporals.format(c.dataInicio(), 'dd/MM/yyyy')}"></td>
 						<td th:text="${#temporals.format(c.dataFim(), 'dd/MM/yyyy')}"></td>
-						<td>[[${c.status()}]]</td>
+						<td>[[${c.status().descricao}]]</td>
 						<td>
 							<a th:href="@{'/contrato/formulario/' + ${c.id()}}" title="Editar o contrato"
 								class="fa-regular fa-pen-to-square icon-dark"></a> &nbsp;

@@ -103,7 +103,7 @@
 				<div class="col-md-6">
 					<label for="status" class="form-label">Status</label>
 					<select class="form-select" id="status" th:field="*{status}" th:errorclass="is-invalid">
-						<option th:each="s : ${statusOpcoes}" th:value="${s}" th:text="${s}"></option>
+						<option th:each="s : ${statusOpcoes}" th:value="${s}" th:text="${s.descricao}"></option>
 					</select>
 					<div class="invalid-feedback" th:errors="*{status}"></div>
 				</div>
@@ -111,6 +111,10 @@
 
 			<div class="text-center">
 				<button type="submit" class="btn btn-primary me-2" th:text="${edicao} ? 'atualizar' : 'salvar'"></button>
+				<button type="submit" th:if="${edicao}"
+					th:formaction="@{/contrato/delete/{id}(id=*{id})}"
+					onclick="return confirm('Deseja realmente excluir este contrato?')"
+					class="btn btn-danger me-2">deletar</button>
 				<a th:href="@{/contrato}" class="btn btn-secondary">Cancelar</a>
 			</div>
 		</form>

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public record DadosListagemContrato(
 
         Long id,
+        String raAluno,
         String nomeAluno,
         String nomeEmpresa,
         LocalDate dataInicio,
@@ -17,6 +18,7 @@ public record DadosListagemContrato(
     public DadosListagemContrato(Contrato contrato) {
         this(
                 contrato.getId(),
+                contrato.getAluno().getRa(),
                 contrato.getAluno().getNome(),
                 contrato.getEmpresa().getRazaoSocial(),
                 contrato.getDataInicio(),
