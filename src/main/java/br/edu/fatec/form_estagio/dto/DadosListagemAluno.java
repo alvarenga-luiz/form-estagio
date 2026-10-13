@@ -1,0 +1,34 @@
+package br.edu.fatec.form_estagio.dto;
+
+import br.edu.fatec.form_estagio.model.Aluno;
+
+import java.time.LocalDate;
+
+public record DadosListagemAluno (
+
+		Long id,
+		String ra,
+		String nome,
+		String cep,
+		LocalDate dataNascimento,
+		LocalDate dataIngresso,
+		Long cursoId,
+		String cursoNome, String email, String contato,
+		String escolaNome,
+		String tipoEnsino) {
+
+	public DadosListagemAluno(Aluno aluno) {
+		this(aluno.getId(),
+			aluno.getRa(),
+			aluno.getNome(),
+			aluno.getCep(),
+			aluno.getDataNascimento(),
+			aluno.getDataIngresso(),
+			aluno.getCurso().getId(),
+			aluno.getCurso().getNome(),
+			aluno.getEmail(),
+			aluno.getContato(),
+			aluno.getEscola().getNome(),
+			aluno.getTipoEnsino().getDescricao());
+	}
+}

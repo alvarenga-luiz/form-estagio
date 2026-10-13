@@ -1,20 +1,26 @@
 package br.edu.fatec.form_estagio.model;
 
 
+import br.edu.fatec.form_estagio.enums.StatusContrato;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "contrato")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Contrato {
 
     @Id
@@ -49,6 +55,10 @@ public class Contrato {
 
     @Column(name = "cargo_supervisor", nullable = false)
     private String cargoSupervisor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusContrato status = StatusContrato.EM_ANALISE;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

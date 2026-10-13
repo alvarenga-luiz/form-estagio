@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/head :: head('Manter Contrato')}"></head>
+<body>
+	<header th:replace="~{fragmentos/header :: header(activePage='contrato')}"></header>
+
+	<div class="container-fluid" style="max-width: 900px; margin: 0 auto;">
+		<h2 class="text-center mt-3" th:text="${edicao} ? 'Editar Contrato' : 'Cadastrar Novo Contrato'"></h2>
+
+		<div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+			[[${error}]]
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+
+		<form th:object="${contrato}" th:action="${edicao} ? @{/contrato/atualizar} : @{/contrato/salvar}"
+			method="post" enctype="application/x-www-form-urlencoded">
+
+			<div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" th:errors="*{global}"></div>
+
+			<!-- Cadastro: escolhe aluno e empresa -->
+			<div th:unless="${edicao}" class="row g-3 mb-3">
+				<div class="col-md-6">
+					<label for="idAluno" class="form-label">Aluno</label>
+					<select class="form-select" id="idAluno" th:field="*{idAluno}" th:errorclass="is-invalid">
+						<option value="">Selecione...</option>
+						<option th:each="a : ${alunos}" th:value="${a.id()}" th:text="${a.ra() + ' - ' + a.nome()}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{idAluno}"></div>
+				</div>
+				<div class="col-md-6">
+					<label for="idEmpresa" class="form-label">Empresa</label>
+					<select class="form-select" id="idEmpresa" th:field="*{idEmpresa}" th:errorclass="is-invalid">
+						<option value="">Selecione...</option>
+						<option th:each="e : ${empresas}" th:value="${e.id()}" th:text="${e.razaoSocial()}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{idEmpresa}"></div>
+				</div>
+			</div>
+
+			<!-- Edição: aluno e empresa não mudam -->
+			<div th:if="${edicao}">
+				<input type="hidden" th:field="*{id}" />
+				<div class="row g-3 mb-3">
+					<div class="col-md-6">
+						<label class="form-label">Aluno</label>
+						<input type="text" class="form-control" th:value="${contratoAtual.nomeAluno()}" disabled>
+					</div>
+					<div class="col-md-6">
+						<label class="form-label">Empresa</label>
+						<input type="text" class="form-control" th:value="${contratoAtual.nomeEmpresa()}" disabled>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-4">
+					<label for="dataInicio" class="form-label">Data de Início</label>
+					<input type="date" class="form-control" id="dataInicio" th:field="*{dataInicio}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{dataInicio}"></div>
+				</div>
+				<div class="col-md-4">
+					<label for="dataFim" class="form-label">Data de Término</label>
+					<input type="date" class="form-control" id="dataFim" th:field="*{dataFim}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{dataFim}"></div>
+				</div>
+				<div class="col-md-4">
+					<label for="cargaHoraria" class="form-label">Carga Horária (h/semana)</label>
+					<input type="number" min="1" class="form-control" id="cargaHoraria" th:field="*{cargaHoraria}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{cargaHoraria}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-12">
+					<label for="areaEstagio" class="form-label">Área do Estágio</label>
+					<input type="text" class="form-control" id="areaEstagio" th:field="*{areaEstagio}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{areaEstagio}"></div>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-12">
+					<label for="descFuncao" class="form-label">Descrição da Função</label>
+					<textarea class="form-control" id="descFuncao" rows="3" th:field="*{descFuncao}"></textarea>
+				</div>
+			</div>
+
+			<div class="row g-3 mb-3">
+				<div class="col-md-6">
+					<label for="supervisor" class="form-label">Supervisor</label>
+					<input type="text" class="form-control" id="supervisor" th:field="*{supervisor}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{supervisor}"></div>
+				</div>
+				<div class="col-md-6">
+					<label for="cargoSupervisor" class="form-label">Cargo do Supervisor</label>
+					<input type="text" class="form-control" id="cargoSupervisor" th:field="*{cargoSupervisor}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{cargoSupervisor}"></div>
+				</div>
+			</div>
+
+			<!-- Status só pode ser alterado na edição; no cadastro todo contrato nasce EM_ANALISE -->
+			<div th:if="${edicao}" class="row g-3 mb-4">
+				<div class="col-md-6">
+					<label for="status" class="form-label">Status</label>
+					<select class="form-select" id="status" th:field="*{status}" th:errorclass="is-invalid">
+						<option th:each="s : ${statusOpcoes}" th:value="${s}" th:text="${s.descricao}"></option>
+					</select>
+					<div class="invalid-feedback" th:errors="*{status}"></div>
+				</div>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" class="btn btn-primary me-2" th:text="${edicao} ? 'atualizar' : 'salvar'"></button>
+				<button type="submit" th:if="${edicao}"
+					th:formaction="@{/contrato/delete/{id}(id=*{id})}"
+					onclick="return confirm('Deseja realmente excluir este contrato?')"
+					class="btn btn-danger me-2">deletar</button>
+				<a th:href="@{/contrato}" class="btn btn-secondary">Cancelar</a>
+			</div>
+		</form>
+	</div>
+
+	<div th:replace="~{fragmentos/footer :: footer}"></div>
+</body>
+</html>
